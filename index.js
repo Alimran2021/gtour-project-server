@@ -31,7 +31,7 @@ async function run() {
     }
 }
 run().catch(console.dir)
-app.get('/check', (req, res) => {
+app.get('/hello', (req, res) => {
     console.log('kuch bhi')
     res.send('hitting check')
 })
