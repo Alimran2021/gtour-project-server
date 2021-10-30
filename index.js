@@ -1,9 +1,10 @@
 const express = require('express')
 const { MongoClient } = require('mongodb');
 const cors = require('cors')
+const ObjectId = require('mongodb').ObjectId
 require('dotenv').config()
 const app = express()
-const port = process.env.PORT || 5000
+const port = process.env.PORT || 4000
 
 app.use(cors())
 app.use(express.json())
@@ -17,6 +18,7 @@ async function run() {
         client.connect()
         const database = client.db("GTour")
         const serviceCollection = database.collection("services")
+        const ordersCollection = database.collection("orders")
 
         // GET SERVICE API
         app.get('/services', async (req, res) => {
@@ -24,17 +26,45 @@ async function run() {
             const result = await service.toArray()
             res.json(result)
         })
+        // GET SINGLE SERVICE
+        // app.get('/services/:id', async (req, res) => {
+        //     const service = await serviceCollection.findOne({ _id: ObjectId(req.params.id) })
+        //     console.log('this is service', service)
+        //     res.send(service)
+        // })
+        // GET ORDERS API
+        app.post('/orders', async (req, res) => {
+            const order = await ordersCollection.insertOne(req.body)
+            res.json(order)
+            console.log(req.body)
 
+
+        })
+        app.get('/orders', async (req, res) => {
+            const orders = ordersCollection.find({})
+            const manageOrder = await orders.toArray()
+            res.json(manageOrder)
+        })
+        // GET NEW SERVICE
+        app.post('/services', async (req, res) => {
+            const newService = await serviceCollection.insertOne(req.body)
+            res.json(newService)
+        })
+
+        // DELETE API
+        app.delete('/orders/:id', async (req, res) => {
+            const id = req.params.id
+            const query = { _id: ObjectId(id) }
+            const result = await ordersCollection.deleteOne(query)
+            console.log('this item be deleted', result)
+            res.json(result)
+        })
     }
     finally {
 
     }
 }
 run().catch(console.dir)
-app.get('/hello', (req, res) => {
-    console.log('kuch bhi')
-    res.send('hitting check')
-})
 
 app.get('/', (req, res) => {
     console.log('this is root route')
