@@ -26,24 +26,28 @@ async function run() {
             const result = await service.toArray()
             res.json(result)
         })
-        // GET SINGLE SERVICE
-        // app.get('/services/:id', async (req, res) => {
-        //     const service = await serviceCollection.findOne({ _id: ObjectId(req.params.id) })
-        //     console.log('this is service', service)
-        //     res.send(service)
-        // })
-        // GET ORDERS API
+        // POST ORDER API
         app.post('/orders', async (req, res) => {
             const order = await ordersCollection.insertOne(req.body)
             res.json(order)
-            console.log(req.body)
+
 
 
         })
+        // GET MYORDER API
+        app.get("/myOrders/:email", async (req, res) => {
+            const result = await ordersCollection.find({
+                email: req.params.email,
+            }).toArray();
+            res.send(result);
+
+        });
+        // GET ALL MANAGE ORDERS
         app.get('/orders', async (req, res) => {
             const orders = ordersCollection.find({})
             const manageOrder = await orders.toArray()
             res.json(manageOrder)
+
         })
         // GET NEW SERVICE
         app.post('/services', async (req, res) => {
@@ -56,7 +60,6 @@ async function run() {
             const id = req.params.id
             const query = { _id: ObjectId(id) }
             const result = await ordersCollection.deleteOne(query)
-            console.log('this item be deleted', result)
             res.json(result)
         })
     }
