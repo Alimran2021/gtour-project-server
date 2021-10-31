@@ -60,6 +60,7 @@ async function run() {
             const id = req.params.id
             const query = { _id: ObjectId(id) }
             const result = await ordersCollection.deleteOne(query)
+            console.log('this item be deleted', result)
             res.json(result)
         })
     }
