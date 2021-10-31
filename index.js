@@ -61,25 +61,19 @@ async function run() {
             const query = { _id: ObjectId(id) }
             const result = await ordersCollection.deleteOne(query)
             res.json(result)
-            // DELETE API
-            app.delete('/myOrders/:id', async (req, res) => {
-                const id = req.params.id
-                const query = { _id: ObjectId(id) }
-                const result = await ordersCollection.deleteOne(query)
-                res.json(result)
-            })
-        }
+        })
+    }
     finally {
 
-        }
     }
+}
 run().catch(console.dir)
 
-    app.get('/', (req, res) => {
-        console.log('this is root route')
-        res.send('connect database')
-    })
+app.get('/', (req, res) => {
+    console.log('this is root route')
+    res.send('connect database')
+})
 
-    app.listen(port, () => {
-        console.log('connected to port', port)
-    })
+app.listen(port, () => {
+    console.log('connected to port', port)
+})
